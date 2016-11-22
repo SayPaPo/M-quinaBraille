@@ -1,24 +1,23 @@
 l = open('El Conde de Montecristo Cap\xc3\xadtulo XXIX.txt','r')
+v = l.readlines()
 
 parrafos = 0
 saltos = 0
-l2 = l.readline()
 
-while (parrafos <=1000):
-	if (l2 == ''):
-		mensaje = "El archivo tiene " + repr(parrafos) + " parrafos y " + repr(saltos) + " l\xc3\xadneas en blanco."
-		print(mensaje)
-		break
-	elif (l2 == '\n'):
+for linea in v:
+	
+
+	if (linea == '\n'):
 		saltos += 1
-		l2 = l.readline()
-	elif (l2 == '\r'):
+		
+	elif (linea == '\r'):
 		saltos += 1
-		l2 = l.readline()
-	elif (l2 == '\r\n'):
+		
+	elif (linea == '\r\n'):
 		saltos += 1
-		l2 = l.readline()
+		
 	else:
 		parrafos += 1
-		l2 = l.readline()
-	
+		
+mensaje = "El archivo tiene " + repr(parrafos) + " parrafos y " + repr(saltos) + " l\xc3\xadneas en blanco."
+print(mensaje)
