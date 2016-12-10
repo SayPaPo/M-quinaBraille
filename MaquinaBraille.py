@@ -8,7 +8,8 @@ import glob
 from gtts import gTTS
 import subprocess
 
-archivos = []
+arc = 0 #Se utiliza en Reproduccion_Titulos()
+arc_0 = 0
 
 def Iniciar():
 
@@ -16,8 +17,10 @@ def Iniciar():
 	GPIO.setmode(GPIO.BCM)
 	GPIO.setwarnings(False)
 
-        GPIO.setup(27, GPIO.IN) #Leer titulos de archivos
-        GPIO.setup(17, GPIO.IN) #Detener reproduccion
+        GPIO.setup(27, GPIO.IN) #Reproducir cantidad de archivos.
+        GPIO.setup(17, GPIO.IN) #Reproducir titulos de los archivos.
+        GPIO.setup(5, GPIO.IN) #Estadisticas del archivo
+        GPIO.setup(12, GPIO.IN) #Inicio de reproduccion
 	
 	GPIO.setup(13, GPIO.OUT)  
 	GPIO.setup(19, GPIO.OUT)
@@ -26,39 +29,20 @@ def Iniciar():
 	GPIO.setup(23, GPIO.OUT)
 	GPIO.setup(24, GPIO.OUT)
 
-def Estadisticas_Archivo(fname):
 
-        l = open(fname,'r')
-        v = l.readlines()
+def Estadisticas_Archivo(archivos):
 
-        parrafos = 0
-        saltos = 0
-
-        for linea in v:
-                if (linea == '\n'):
-                        saltos += 1
-                elif (linea == '\r'):
-                        saltos += 1
-                elif (linea == '\r\n'):
-                        saltos += 1
-                else:
-                        parrafos += 1
-
-        men2 = 'El archivo seleccionado contiene %s parrafos y %s saltos de linea' % (parrafos, saltos)
-        tts = gTTS(text=men2, lang='es')
-        tts.save('/home/pi/AudiosBraille/men2.mp3')
-        subprocess.Popen(['mpg123','-q','/home/pi/AudiosBraille/men2.mp3']).wait()
+        global arc_0
+        nombre = '/home/pi/AudiosBraille/Ests_archs_%s.mp3' % arc_0
+        subprocess.Popen(['mpg123','-q',nombre]).wait()
 
 def Estadisticas_Memoria():
 
-        archivos = glob.glob('*.txt')
-        numero = len(archivos)
-        men1 = 'La memoria contiene %s archivos de texto' % numero
-        tts = gTTS(text= men1, lang='es')
-        tts.save('/home/pi/AudiosBraille/men1.mp3')
         subprocess.Popen(['mpg123','-q','/home/pi/AudiosBraille/men1.mp3']).wait()
 
-def Nombre_Archivo():
+def Estadisticas(archivos):
+
+        subprocess.Popen(['mpg123','-q','/home/pi/AudiosBraille/sis_audio/Bienvenido.mp3']).wait()
 
         nom_archivo = 0
 
@@ -66,28 +50,65 @@ def Nombre_Archivo():
                 tts = gTTS(text=libros, lang='es')
                 tts.save('/home/pi/AudiosBraille/titulo_%s.mp3' % nom_archivo)
                 nom_archivo += 1
-arc = 0
+        print('Nombres de archivos listos')
 
-def Repruccion_Titulos(): 
+        numero = len(archivos)
+        men1 = 'La memoria contiene %s archivos de texto' % numero
+        tts = gTTS(text= men1, lang='es')
+        tts.save('/home/pi/AudiosBraille/men1.mp3')
+        print('Cantidad de archivos guardada')
+
+        nom_archivo1 = 0
+        
+        for libros in archivos:
+                        
+                l = open(libros,'r')
+                v = l.readlines()
+
+                parrafos = 0
+                saltos = 0
+                        
+                for linea in v:
+                        if (linea == '\n'):
+                                saltos += 1
+                        elif (linea == '\r'):
+                                saltos += 1
+                        elif (linea == '\r\n'):
+                                saltos += 1
+                        else:
+                                parrafos += 1
+
+                men2 = 'El archivo llamado %s contiene %s p\xc3\xa1rrafos y %s saltos de l\xc3\xadnea' % (libros, parrafos, saltos)
+                tts = gTTS(text=men2, lang='es')
+                tts.save('/home/pi/AudiosBraille/Ests_archs_%s.mp3' % nom_archivo1)
+                nom_archivo1 += 1
+                
+        print('Estadisticas de archivos lista')
+        subprocess.Popen(['mpg123','-q','/home/pi/AudiosBraille/sis_audio/Listo.mp3']).wait()
+
+def Repruccion_Titulos(archivos): 
 
         global arc
+        global arc_0
         titulo = '/home/pi/AudiosBraille/titulo_%s.mp3' % arc 
         subprocess.Popen(['mpg123','-q',titulo]).wait() 
-        print('Encendido')
+        print(arc)
+        print(arc_0)
 
         if (arc == (len(archivos)-1)):
-            subprocess.Popen(['mpg123','-q','/home/pi/AudiosBraille/sis_audio/FL.mp3']).wait()
-            arc = 0
+                subprocess.Popen(['mpg123','-q','/home/pi/AudiosBraille/sis_audio/FL.mp3']).wait()
+                arc = 0
+                arc_0 = len(archivos)-1
         else:
-            arc += 1
+                arc_0 = arc        
+                arc += 1
 
+def Reproduccion_B(archivos):
 
-
-def Reproduccion_B(fname):
-
+        global arc_0
+        fname = archivos[arc_0]
         texto = open(fname,'r')
         vtexto = texto.readlines()
-
 
         po = 0
         t = 1
