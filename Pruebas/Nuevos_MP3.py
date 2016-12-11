@@ -5,5 +5,5 @@ import glob
 from gtts import gTTS
 import subprocess
 
-tts = gTTS(text='Todo listo para comenzar.', lang='es')
-tts.save('/home/pi/AudiosBraille/sis_audio/Listo.mp3')
+tts = gTTS(text='Ha pausado la reproducción.', lang='es')
+tts.save('/home/pi/AudiosBraille/sis_audio/Pausa.mp3')
