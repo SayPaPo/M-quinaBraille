@@ -9,7 +9,8 @@ import MaquinaBraille
 import threading
 
 MaquinaBraille.Iniciar() #Establece el directorio de trabajo y la configuracion de pines GPIO.
-archivos = glob.glob('*.txt') #Crea un vector de nombres de los archivos en la llave. Se saco de Estadisticas_Memoria() para que se ejecute primero. 
+archivos = glob.glob('*.txt') #Crea un vector de nombres de los archivos en la llave. 
+				#Se saco de Estadisticas_Memoria() para que se ejecute primero. 
 subprocess.Popen(['mpg123','-q','/home/pi/AudiosBraille/sis_audio/Bienvenido2.mp3']).wait()
 
 
