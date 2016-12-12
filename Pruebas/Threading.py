@@ -5,7 +5,7 @@ import sys
 import glob
 from gtts import gTTS
 import subprocess
-import MaquinaBraille
+#import MaquinaBraille
 import threading
 
 GPIO.setmode(GPIO.BCM)

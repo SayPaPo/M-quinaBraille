@@ -80,32 +80,45 @@ def Rep_B2(y):
         largo_vletra = len(vletra)
         
 
-def Control_Reproduccion():
+#def Control_Reproduccion():
         
-        global thread_inicial
-        Rep_B0()
-        for i1 in range(largo_vtexto):
-                Rep_B1(i1)
-                for i2 in range(largo_vpalabras):
-                        y = vpalabras[i2]
-                        Rep_B2(y)
-                        for i3 in range(largo_vletra):
-                                y2 = vletra[i3]
-                                nuevo_thread(thread_inicial,y2)
-                                time.sleep(1)
-                                thread_inicial += 1
+        #global thread_inicial
+        #Rep_B0()
+        #for i1 in range(largo_vtexto):
+                #Rep_B1(i1)
+                #for i2 in range(largo_vpalabras):
+                        #y = vpalabras[i2]
+                        #Rep_B2(y)
+                        #for i3 in range(largo_vletra):
+                                #y2 = vletra[i3]
+                                #MaquinaBraille.Reproduccion_B2(y2)
+
+                                #print evento.wait(0)
+                                #nuevo_thread(thread_inicial,y2)
+                                #time.sleep(1)
+                                #thread_inicial += 1
                                 #print 'fin de caracter'
                         
 
-def nuevo_thread(numero,y):
-        t_numero = threading.Thread(target=Reproduccion_Braille, args=(evento,y,))
+def nuevo_thread(numero):
+        t_numero = threading.Thread(target=Reproduccion_Braille, args=(evento,))
         t_numero.start()
         #t_numero.join()
 
-def Reproduccion_Braille(evento,y):
-        
-        while not evento.wait(0):
-                MaquinaBraille.Reproduccion_B2(y)
+def Reproduccion_Braille(evento):
+        while (not evento.wait(0)):
+                global thread_inicial
+                Rep_B0()
+                for i1 in range(largo_vtexto):
+                        Rep_B1(i1)
+                        for i2 in range(largo_vpalabras):
+                                y = vpalabras[i2]
+                                Rep_B2(y)
+                                for i3 in range(largo_vletra):
+                                        y2 = vletra[i3]
+                                        MaquinaBraille.Reproduccion_B2(y2)
+                #print evento.wait(0.01)
+                #Control_Reproduccion()
                 break
 def menu():
 
@@ -116,6 +129,8 @@ def menu():
         entrada_anterior4 = 0
 
         pausa = 0
+
+        global thread_inicial
         
         while True:
 
@@ -137,7 +152,8 @@ def menu():
                         print pausa
                         if pausa == 0:
                                 evento.clear()
-                                Control_Reproduccion()
+                                nuevo_thread(thread_inicial)
+                                thread_inicial += 1
                                 pausa = 1
                                 
                         elif pausa == 1:

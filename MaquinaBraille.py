@@ -562,7 +562,7 @@ def Reproduccion_B2(y):
                 GPIO.output(AbIz, 1)
                 GPIO.output(AbDe, 1)
 
-        #time.sleep(t)
+        time.sleep(t)
 
 
 #GPIO.cleanup()
